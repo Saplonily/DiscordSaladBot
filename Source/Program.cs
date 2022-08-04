@@ -17,7 +17,6 @@ class Program
         p.MainAsync().GetAwaiter().GetResult();
     }
 
-    public SaladPublicSet salad;
     private DiscordSocketClient _client;
     public static Program singleton;
     public static DiscordSocketClient Client { get => Program.singleton._client; }
@@ -37,7 +36,7 @@ class Program
             token = jd.RootElement.GetProperty("config").GetProperty("token").GetString();
         }
 
-        salad = new SaladPublicSet();
+        SaladPublicSet salad = new SaladPublicSet();
 
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();
@@ -61,9 +60,9 @@ class Program
         int lengthOfCommand = command.Length;
 
         Console.WriteLine($"Message arrived:\n{message.Author}:{command}");
-        if (message.Content.Length > 1)
+        if (lengthOfCommand > 1)
         {
-            Command.AnalyzeMessage(message);
+            CommandAnalyzer.AnalyzeMessage(message);
         }
 
         return Task.CompletedTask;

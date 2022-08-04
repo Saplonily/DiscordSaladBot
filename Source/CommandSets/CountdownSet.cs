@@ -6,21 +6,23 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 
-public class CountdownSet : ICommandSet, ICommandSetChild
+public class CountdownSet : ICommandSet
 {
-    public CountdownSet(ICommandSet belongTo)
-    {
-        CommandSetHelper.InitCommands(this);
-        this.BelongTo = belongTo;
-    }
-
     public string SetName => "countdown";
 
     public ICommandSet BelongTo { get; private set; }
 
     public bool IsSet { get => true; }
 
-    public List<ICommandSet> Children => throw new NotImplementedException();
+    public List<ICommandSet> ChildCommandSets { get; private set; } = new List<ICommandSet>();
+
+    public List<Command> ChildCommands { get; private set; } = new List<Command>();
+
+    public CountdownSet(ICommandSet belongTo)
+    {
+        CommandSetHelper.GetCommands(this);
+        this.BelongTo = belongTo;
+    }
 
     [Command("new", 2)]
     public async void NewCountdown(string[] args, SocketMessage msg)
@@ -45,9 +47,9 @@ public class CountdownSet : ICommandSet, ICommandSetChild
     public class Countdown
     {
         public Stopwatch watch = new Stopwatch();
+        public long milliseconds = 1000;
         public delegate void CountdownFinishedHandler(Countdown countdown);
         public event CountdownFinishedHandler CountdownFinished;
-        public long milliseconds = 1000;
 
         public Countdown(long time)
         {

@@ -26,9 +26,10 @@ public class SaladPublicSet : ICommandSet
     private int resourceCheckingNumber = 5;
     private Stopwatch watch = new Stopwatch();
 
-    public string SetName => "salad";
-
     public ICommandSet BelongTo => null;
+    public string SetName { get; private set; } = "salad";
+    public List<ICommandSetChild> Children { get; private set; }
+    public bool IsSet { get => true; }
 
     public SaladPublicSet()
     {
@@ -37,9 +38,8 @@ public class SaladPublicSet : ICommandSet
             resourceHeader = jd.RootElement.GetProperty("config").GetProperty("resource_header").GetString();
         }
         //init commands
-        Command.DefaultPrefix = "salad";
-        CommandSetHelper.InitCommands(this);
-        
+        var cmds = CommandSetHelper.GetCommands(this);
+
         Command.CheckingCommands.AddRange(new List<Command>()
         {
             Command.Create("help",1,async(args,msg)=>

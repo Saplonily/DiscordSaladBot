@@ -5,5 +5,6 @@ using System.Reflection;
 public interface ICommandSet : ICommandSetChild
 {
     string SetName { get; }
-    List<ICommandSetChild> Children { get; }
+    List<ICommandSet> ChildCommandSets { get; }
+    List<Command> ChildCommands { get; }
 }
