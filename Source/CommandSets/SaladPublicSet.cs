@@ -19,7 +19,7 @@ using System.Reflection;
 public class SaladPublicSet : ICommandSet
 {
     public SocketGuild guildIn;
-    public TictocGameSet tictoc;
+    public Tictoc tictoc;
     public ISocketMessageChannel dataChannel;
 
     private string resourceHeader;
@@ -28,8 +28,11 @@ public class SaladPublicSet : ICommandSet
 
     public ICommandSet BelongTo => null;
     public string SetName { get; private set; } = "salad";
-    public List<ICommandSetChild> Children { get; private set; }
     public bool IsSet { get => true; }
+
+    public List<ICommandSet> ChildCommandSets { get; private set; }
+
+    public List<Command> ChildCommands { get; private set; }
 
     public SaladPublicSet()
     {
@@ -39,18 +42,11 @@ public class SaladPublicSet : ICommandSet
         }
         //init commands
         var cmds = CommandSetHelper.GetCommands(this);
+        ChildCommands = cmds;
 
+        /*
         Command.CheckingCommands.AddRange(new List<Command>()
         {
-            Command.Create("help",1,async(args,msg)=>
-            {
-                switch(args[0])
-                {
-                    case "tictoc":
-                        await msg.Channel.SendMessageAsync(await FindResource("tictocHelpString"));
-                        break;
-                }
-            }),
             Command.Create("set_data_channel",1,async(args,msg)=>
             {
                 //dataChannel = 
@@ -85,54 +81,27 @@ public class SaladPublicSet : ICommandSet
                         break;
                 }
             })
-        });
+        });*/
 
-        Command.DefaultPrefix = "tictoc";
-        Command.CheckingCommands.AddRange(new List<Command>()
+    }
+
+    public class HelpSet : ICommandSet
+    {
+        public string SetName { get => "help"; }
+
+        public List<ICommandSet> ChildCommandSets { get => null; }
+
+        public List<Command> ChildCommands { get; private set; }
+
+        public bool IsSet => true;
+
+        public ICommandSet BelongTo { get; private set; }
+
+        [Command("tictoc", 0)]
+        public async Task TictocHelp(string[] args, SocketMessage msg)
         {
-            Command.Create("join",0,(args,msg) => {
-                tictoc.Join(msg.Author);
-            }),
-            Command.Create("leave",0,(args,msg) => {
-                tictoc.Leave(msg.Author);
-            }),
-            Command.Create("counts",1,(args,msg) => {
-                tictoc.counts = int.Parse(args[0]);
-                tictoc.Msg($"*Counts to win* has been set to {tictoc.counts}");
-            }),
-            Command.Create("check",0,(args,msg) => {
-                if (tictoc.GameIsRunning)
-                {
-                    tictoc.ShowGamePad();
-                }
-                else
-                {
-                    tictoc.Msg("Game have not been started!");
-                }
-            }),
-            Command.Create("start",0,(args,msg) => {
-                tictoc.Start();
-            }),
-            Command.Create("place",2,(args,msg)=>{
-                tictoc.Place(int.Parse(args[0]) - 1, int.Parse(args[1]) - 1, msg.Author);
-            }),
-            Command.Create("set_size",2,(args,msg)=>{
-                tictoc.SetSize(int.Parse(args[0]),int.Parse(args[1]));
-            }),
-            Command.Create("end",0,(args,msg)=>{
-                tictoc.End();
-                tictoc = null;
-            }),
-            Command.Create("list",0,(args,msg)=>
-            {
-                var str = "Players playing: ";
-                foreach (var item in tictoc.players)
-                {
-                    str += item.Username + " ";
-                }
-                tictoc.Msg(str);
-            })
-        });
+            await msg.Channel.SendMessageAsync(FindResource("tictocHelpString"));
+        }
     }
 
     [Command("hello", 0)]
@@ -150,7 +119,7 @@ public class SaladPublicSet : ICommandSet
     [Command("tictoc", 0)]
     public async Task Tictoc(string[] args, SocketMessage msg)
     {
-        tictoc = new TictocGameSet(msg.Channel);
+        tictoc = new Tictoc(msg.Channel);
         await msg.Channel.SendMessageAsync($"tictoc game started! send \"/tictoc join\" to join the game!");
     }
 
@@ -173,7 +142,7 @@ public class SaladPublicSet : ICommandSet
     public async Task ReadResource(string[] args, SocketMessage msg)
     {
         var s = FindResource(args[0]);
-        await msg.Channel.SendMessageAsync($"resource found:\n{await s}");
+        await msg.Channel.SendMessageAsync($"resource found:\n{s}");
     }
 
     [Command("check_weather", 2)]
@@ -303,26 +272,8 @@ public class SaladPublicSet : ICommandSet
         await msg.Channel.SendMessageAsync(result);
     }
 
-    private async Task<string> FindResource(string resourceName)
+    protected static string FindResource(string resourceName)
     {
-        var msgs = dataChannel.GetMessagesAsync(resourceCheckingNumber);
-        await foreach (var spans in msgs)
-        {
-            foreach (var item in spans)
-            {
-                var lines = item.Content.Split("\n");
-                lines[0].Trim();
-                if (lines[0].Contains(resourceHeader))
-                {
-                    var str = lines[0].Remove(0, resourceHeader.Length + 1);
-                    if (str == resourceName)
-                    {
-                        //2是因为有空格和回车
-                        return item.Content.Remove(0, resourceHeader.Length + resourceName.Length + 2);
-                    }
-                }
-            }
-        }
-        return "Null";
+        return resourceName;
     }
 }

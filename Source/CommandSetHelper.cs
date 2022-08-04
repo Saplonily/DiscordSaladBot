@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public static class CommandSetHelper
 {
     /// <summary>
-    /// 获取这个类本身带有Command特性的所有方法(指令)
+    /// 生成这个类本身带有Command特性的所有方法(指令)
     /// </summary>
     /// <param name="ins">CommandSet实例</param>
     public static List<Command> GetCommands<T>(T ins) where T : ICommandSet
@@ -27,7 +27,8 @@ public static class CommandSetHelper
                         attr.Name,
                         attr.ArgumentCounts,
                         (args, msg) =>
-                        method.Invoke(ins, new object[] { args, msg })
+                        method.Invoke(ins, new object[] { args, msg }),
+                        ins
                         )
                     );
             }
