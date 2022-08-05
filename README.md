@@ -21,3 +21,5 @@ And its content:<br>
 ## Where to invite salad bot
 You can join [my discord server](https://discord.gg/aWWJjFZDbx) to ask for it.
 
+## Update Log
+[Click here](UpdateLog.md)
