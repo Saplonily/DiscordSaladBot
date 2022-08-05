@@ -1,9 +1,11 @@
+using System.Diagnostics;
 using System;
 using System.Collections.Generic;
 using Discord.WebSocket;
 
 namespace SaladBot;
 
+[DebuggerDisplay("{CommandName}-{ArgsCounts}")]
 public class Command : ICommandSetChild
 {
     public string CommandName { get; }

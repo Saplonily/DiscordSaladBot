@@ -37,8 +37,17 @@ public static class CommandAnalyzer
             //depth = 1
             //parts.Length - depth - 2 = 2
             string[] gotArgs = parts[(depth + 2)..];
-            int gotArgsCount = gotArgs.Length;
-            CombineArgsParts(ref gotArgs,cmd.ArgsCounts);
+            //gotArgs : 100 yourFuckingName bulabula
+            //cmdArgs : count = 2
+            if (gotArgs.Length > cmd.ArgsCounts)
+            {
+                CombineArgsParts(ref gotArgs, cmd.ArgsCounts);
+            }
+            if (gotArgs.Length < cmd.ArgsCounts)
+            {
+                message.Channel.SendMessageAsync($"{message.Author.Mention} Less argument got.");
+                return;
+            }
             cmd.Action.Invoke(gotArgs, message);
         }
     }
@@ -72,6 +81,7 @@ public static class CommandAnalyzer
                 foreach (var deeperSet in set.ChildCommandSets)
                 {
                     FindCommandInSet(deeperSet, cmdParts, out deeperCommandFound, depth);
+                    if (deeperCommandFound is not null) break;
                 }
                 if (deeperCommandFound is null)
                 {
@@ -103,18 +113,22 @@ public static class CommandAnalyzer
     }
 
     /// <summary>
-    /// 合并多余的参数并追加到最后一个参数后
+    /// <para>合并多余的参数并追加到最后一个参数后</para>
+    /// <para>位于argsRange之外的参数会被合并到最后一个参数处</para>
     /// </summary>
-    public static void CombineArgsParts(ref string[] strs, int index)
+    /// <param name="strs">参数</param>
+    /// <param name="cmdArgsCount">cmd本身参数数量</param>
+    public static void CombineArgsParts(ref string[] strs, int cmdArgsCount)
     {
-        if(strs.Length == index)
-            return;
-        string combinedArgs = "";
-        foreach (var item in strs[index..])
+        //salad repeat I'm stupid
+        //-> I'm stupid
+        //-> cmdArgsCount = 1
+        var lst = strs[cmdArgsCount - 1];
+        for (int i = cmdArgsCount; i < strs.Length; i++)
         {
-            combinedArgs += item + " ";
+            lst += " " + strs[i];
         }
-        strs[index] = combinedArgs;
+        strs[cmdArgsCount - 1] = lst;
     }
 
 }

@@ -31,7 +31,9 @@ public class SaladSet : ICommandSet
         ChildCommands = cmds;
         ChildCommandSets = new List<ICommandSet>()
         {
-            new CountdownSet(this)
+            new CountdownSet(this),
+            new WatchSet(this),
+            new TictocGameSet(this)
         };
 
     }
@@ -65,13 +67,6 @@ public class SaladSet : ICommandSet
     public async Task Age(string[] args, SocketMessage msg)
     {
         await msg.Channel.SendMessageAsync($"Your account was created at {msg.Author.CreatedAt.DateTime}");
-    }
-
-    [Command("tictoc", 0)]
-    public async Task Tictoc(string[] args, SocketMessage msg)
-    {
-        tictoc = new Tictoc(msg.Channel);
-        await msg.Channel.SendMessageAsync($"tictoc game started! send \"/tictoc join\" to join the game!");
     }
 
     [Command("repeat", 1)]

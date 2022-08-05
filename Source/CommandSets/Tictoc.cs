@@ -11,6 +11,8 @@ public partial class TictocGameSet
 {
     public class Tictoc
     {
+        public Tictoc() { }
+
         public class ChessGrid
         {
             //-1为空,其他为players列表里的序号
@@ -29,7 +31,7 @@ public partial class TictocGameSet
             }
         }
 
-        ISocketMessageChannel playingChannel;
+        public ISocketMessageChannel playingChannel;
 
         public List<SocketUser> players = new List<SocketUser>();
 
@@ -53,16 +55,16 @@ public partial class TictocGameSet
                 if (!players.Contains(user))
                 {
                     players.Add(user);
-                    Msg($"{user.Mention} joined the game!");
+                    playingChannel.SendMessageAsync($"{user.Mention} joined the game!");
                 }
                 else
                 {
-                    Msg($"{user.Mention}, you have joined the game.");
+                    playingChannel.SendMessageAsync($"{user.Mention}, you have joined the game.");
                 }
             }
             else
             {
-                Msg($"{user.Mention}, no more seats for playing!");
+                playingChannel.SendMessageAsync($"{user.Mention}, no more seats for playing!");
             }
         }
 
@@ -70,12 +72,12 @@ public partial class TictocGameSet
         {
             if (players.Contains(user))
             {
-                Msg($"{user.Mention}, you have left the game!");
+                playingChannel.SendMessageAsync($"{user.Mention}, you have left the game!");
                 players.Remove(user);
             }
             else
             {
-                Msg($"{user.Mention}, you haven't joined the game!");
+                playingChannel.SendMessageAsync($"{user.Mention}, you haven't joined the game!");
             }
         }
 
@@ -84,7 +86,7 @@ public partial class TictocGameSet
             playingChannel = channel;
         }
 
-        public void Place(int width, int height, SocketUser user)
+        public SocketUser Place(int width, int height, SocketUser user)
         {
             if (currentPlayer == user)
             {
@@ -92,7 +94,11 @@ public partial class TictocGameSet
                 {
                     grids[height, width].status = players.FindIndex((u) => u.Username == user.Username);
                     ShowGamePad();
-                    CheckWinner();
+                    var winner = CheckWinner();
+                    if (CheckWinner() is not null)
+                    {
+                        return winner;
+                    }
                     if (GameIsRunning)
                     {
                         var ind = players.FindIndex((i) => i == currentPlayer);
@@ -102,24 +108,25 @@ public partial class TictocGameSet
                         else
                             ind++;
                         currentPlayer = players[ind];
-                        Msg($"{currentPlayer.Mention}, it's your turn!");
                     }
+                    return null;
                 }
                 else
                 {
-                    Msg("You can't place there!");
+                    playingChannel.SendMessageAsync("You can't place there!");
                 }
             }
             else
             {
-                Msg($"{user.Mention}, it's not your turn!");
+                playingChannel.SendMessageAsync($"{user.Mention}, it's not your turn!");
             }
+            return null;
         }
 
         public void SetSize(int width, int height)
         {
             size = (width, height);
-            Msg("Size has been set.");
+            playingChannel.SendMessageAsync("Size has been set.");
         }
 
         public string GetGameString()
@@ -139,18 +146,12 @@ public partial class TictocGameSet
 
         public void ShowGamePad()
         {
-            Msg($"Here is the game status:\n{this.GetGameString()}");
+            playingChannel.SendMessageAsync($"Here is the game status:\n{this.GetGameString()}");
         }
 
         public void End()
         {
             this.GameIsRunning = false;
-            Msg("Game ended!");
-        }
-
-        public void Msg(string msg)
-        {
-            playingChannel.SendMessageAsync(msg);
         }
 
         public void Start()
@@ -168,7 +169,7 @@ public partial class TictocGameSet
             ShowGamePad();
         }
 
-        public void CheckWinner()
+        public SocketUser CheckWinner()
         {
             //判断赢了没
             int aim;
@@ -195,12 +196,9 @@ public partial class TictocGameSet
 
                 }
             }
-            return;
+            return null;
         wined:
-            this.Msg($"{this.players[aim].Mention} win the game!");
-            this.End();
-
-
+            return this.players[aim];
         }
     }
 }
