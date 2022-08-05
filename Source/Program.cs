@@ -36,7 +36,7 @@ class Program
             token = jd.RootElement.GetProperty("config").GetProperty("token").GetString();
         }
 
-        SaladPublicSet salad = new SaladPublicSet();
+        CommandAnalyzer.AddPublicRoot(new SaladPublicSet());
 
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();

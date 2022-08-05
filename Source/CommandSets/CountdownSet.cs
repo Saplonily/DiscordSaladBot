@@ -14,13 +14,13 @@ public class CountdownSet : ICommandSet
 
     public bool IsSet { get => true; }
 
-    public List<ICommandSet> ChildCommandSets { get; private set; } = new List<ICommandSet>();
+    public List<ICommandSet> ChildCommandSets { get; private set; }
 
-    public List<Command> ChildCommands { get; private set; } = new List<Command>();
+    public List<Command> ChildCommands { get; private set; }
 
     public CountdownSet(ICommandSet belongTo)
     {
-        CommandSetHelper.GetCommands(this);
+        ChildCommands = CommandSetHelper.GetCommands(this);
         this.BelongTo = belongTo;
     }
 

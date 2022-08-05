@@ -9,7 +9,7 @@ Use .net core 3.1 to build it.<br>
 Easy like **`dotnet build`**<br>
 Remember to create a new file named `config.json`<br>
 And its content:<br>
-```
+```json
 {
     "config": {
         "token": "-Your app Token here-",
@@ -20,3 +20,4 @@ And its content:<br>
 
 ## Where to invite salad bot
 You can join [my discord server](https://discord.gg/aWWJjFZDbx) to ask for it.
+

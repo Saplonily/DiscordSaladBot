@@ -22,27 +22,28 @@ public class SaladPublicSet : ICommandSet
     public Tictoc tictoc;
     public ISocketMessageChannel dataChannel;
 
-    private string resourceHeader;
-    private int resourceCheckingNumber = 5;
     private Stopwatch watch = new Stopwatch();
 
-    public ICommandSet BelongTo => null;
+    public ICommandSet BelongTo { get => null; }
     public string SetName { get; private set; } = "salad";
     public bool IsSet { get => true; }
-
     public List<ICommandSet> ChildCommandSets { get; private set; }
-
     public List<Command> ChildCommands { get; private set; }
 
     public SaladPublicSet()
     {
         using (JsonDocument jd = JsonDocument.Parse(File.ReadAllText("config.json")))
         {
-            resourceHeader = jd.RootElement.GetProperty("config").GetProperty("resource_header").GetString();
+            //现在没有东西需要读取
+            //resourceHeader = jd.RootElement.GetProperty("config").GetProperty("resource_header").GetString();
         }
         //init commands
         var cmds = CommandSetHelper.GetCommands(this);
         ChildCommands = cmds;
+        ChildCommandSets = new List<ICommandSet>()
+        {
+            new CountdownSet(this)
+        };
 
         /*
         Command.CheckingCommands.AddRange(new List<Command>()
