@@ -32,7 +32,15 @@ public static class CommandAnalyzer
         }
         else
         {
-            cmd.Action.Invoke(parts[(depth + 1)..], message);
+            //parts:
+            //salad countdown new 100 yourFuckingName
+            //parts.Length = 5
+            //depth = 1
+            //parts.Length - depth - 2 = 2
+            string[] gotArgs = parts[(depth + 2)..];
+            int gotArgsCount = gotArgs.Length;
+            CombineArgsParts(ref gotArgs,cmd.ArgsCounts);
+            cmd.Action.Invoke(gotArgs, message);
         }
     }
 
@@ -98,15 +106,16 @@ public static class CommandAnalyzer
     /// <summary>
     /// 合并多余的参数并追加到最后一个参数后
     /// </summary>
-    public static string[] CombineArgsParts(ref string[] strs, int index)
+    public static void CombineArgsParts(ref string[] strs, int index)
     {
+        if(strs.Length == index)
+            return;
         string combinedArgs = "";
         foreach (var item in strs[index..])
         {
             combinedArgs += item + " ";
         }
         strs[index] = combinedArgs;
-        return strs;
     }
 
 }
