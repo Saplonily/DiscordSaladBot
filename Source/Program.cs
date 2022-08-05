@@ -60,7 +60,8 @@ class Program
         int lengthOfCommand = command.Length;
 
         Console.WriteLine($"Message arrived:\n{message.Author}:{command}");
-        if (lengthOfCommand > 1)
+        bool isCommand = (command.StartsWith('!')) || (command.StartsWith('/'));
+        if (isCommand && lengthOfCommand > 1)
         {
             CommandAnalyzer.AnalyzeMessage(message);
         }
