@@ -1,5 +1,7 @@
 using System;
 
+namespace SaladBot;
+
 /// <summary>
 /// 被Command和CommandSet继承
 /// </summary>

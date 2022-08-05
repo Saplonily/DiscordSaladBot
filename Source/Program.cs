@@ -7,6 +7,9 @@ using Discord;
 using System.IO;
 using System.Collections.Generic;
 using System.Text.Json;
+using SaladBot.Sets;
+
+namespace SaladBot;
 
 class Program
 {
@@ -36,7 +39,7 @@ class Program
             token = jd.RootElement.GetProperty("config").GetProperty("token").GetString();
         }
 
-        CommandAnalyzer.AddPublicRoot(new SaladPublicSet());
+        CommandAnalyzer.AddRoot(new SaladSet());
 
         await _client.LoginAsync(TokenType.Bot, token);
         await _client.StartAsync();

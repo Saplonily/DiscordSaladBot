@@ -22,4 +22,4 @@ And its content:<br>
 You can join [my discord server](https://discord.gg/aWWJjFZDbx) to ask for it.
 
 ## Update Log
-[Click here](UpdateLog.md)
+[UpdateLog.md](UpdateLog.md)

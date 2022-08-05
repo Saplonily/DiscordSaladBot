@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Discord.WebSocket;
 
+namespace SaladBot;
+
 public class Command : ICommandSetChild
 {
     public string CommandName { get; }

@@ -2,71 +2,90 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Discord;
+using Discord.WebSocket;
 
-public class TictocGameSet : ICommandSetGuildSeparated
+namespace SaladBot.Sets;
+
+public partial class TictocGameSet : ICommandSet
 {
-    public IUserGuild GuildIn { get; private set; }
-
-    public string SetName { get => "tictoc"; }
-
+    public string SetName => "tictoc";
     public List<ICommandSet> ChildCommandSets { get => null; }
-
     public List<Command> ChildCommands { get; private set; }
-
     public bool IsSet { get => true; }
-
     public ICommandSet BelongTo { get; private set; }
 
-    public TictocGameSet(IUserGuild guild, ICommandSet belongTo)
+    public TictocGameSet(ICommandSet belongTo)
     {
-        GuildIn = guild;
         BelongTo = belongTo;
+        ChildCommands = CommandSetHelper.GetCommands(this);
     }
-    /*
-    Command.CheckingCommands.AddRange(new List<Command>()
+
+    [Command("join")]
+    public void Join(string[] args, SocketMessage msg)
+    {
+        tictoc.Join(msg.Author);
+    }
+
+    [Command("leave")]
+    public void Leave(string[] args, SocketMessage msg)
+    {
+        tictoc.Leave(msg.Author);
+    }
+
+    [Command("set_counts", 1)]
+    public void SetCounts(string[] args, SocketMessage msg)
+    {
+        tictoc.counts = int.Parse(args[0]);
+        tictoc.Msg($"*Counts to win* has been set to {tictoc.counts}");
+    }
+
+    [Command("check")]
+    public void Check(string[] args, SocketMessage msg)
+    {
+        if (tictoc.GameIsRunning)
         {
-            Command.Create("join",0,(args,msg) => {
-                tictoc.Join(msg.Author);
-            }),
-            Command.Create("leave",0,(args,msg) => {
-                tictoc.Leave(msg.Author);
-            }),
-            Command.Create("counts",1,(args,msg) => {
-                tictoc.counts = int.Parse(args[0]);
-                tictoc.Msg($"*Counts to win* has been set to {tictoc.counts}");
-            }),
-            Command.Create("check",0,(args,msg) => {
-                if (tictoc.GameIsRunning)
-                {
-                    tictoc.ShowGamePad();
-                }
-                else
-                {
-                    tictoc.Msg("Game have not been started!");
-                }
-            }),
-            Command.Create("start",0,(args,msg) => {
-                tictoc.Start();
-            }),
-            Command.Create("place",2,(args,msg)=>{
-                tictoc.Place(int.Parse(args[0]) - 1, int.Parse(args[1]) - 1, msg.Author);
-            }),
-            Command.Create("set_size",2,(args,msg)=>{
-                tictoc.SetSize(int.Parse(args[0]),int.Parse(args[1]));
-            }),
-            Command.Create("end",0,(args,msg)=>{
-                tictoc.End();
-                tictoc = null;
-            }),
-            Command.Create("list",0,(args,msg)=>
-            {
-                var str = "Players playing: ";
-                foreach (var item in tictoc.players)
-                {
-                    str += item.Username + " ";
-                }
-                tictoc.Msg(str);
-            })
-        });*/
-    
+            tictoc.ShowGamePad();
+        }
+        else
+        {
+            tictoc.Msg("Game have not been started!");
+        }
+    }
+
+    [Command("start")]
+    public void Start(string[] args, SocketMessage msg)
+    {
+        tictoc.Start();
+    }
+
+    [Command("place")]
+    public void Place(string[] args, SocketMessage msg)
+    {
+        tictoc.Place(int.Parse(args[0]) - 1, int.Parse(args[1]) - 1, msg.Author);
+    }
+
+    [Command("set_size")]
+    public void StaSetSize(string[] args, SocketMessage msg)
+    {
+        tictoc.SetSize(int.Parse(args[0]), int.Parse(args[1]));
+    }
+
+    [Command("end")]
+    public void End(string[] args, SocketMessage msg)
+    {
+        tictoc.End();
+        tictoc = null;
+    }
+
+    [Command("list")]
+    public void ShowPlayerList(string[] args, SocketMessage msg)
+    {
+        var str = "Players playing: ";
+        foreach (var item in tictoc.players)
+        {
+            str += item.Username + " ";
+        }
+        tictoc.Msg(str);
+    }
+
 }

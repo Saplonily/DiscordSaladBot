@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Discord.WebSocket;
 
+namespace SaladBot;
+
 public static class CommandAnalyzer
 {
-    public static List<ICommandSet> RootPublicCommandSet { get; private set; }
+    public static List<ICommandSet> RootCommandSet { get; private set; }
         = new List<ICommandSet>();
-    public static List<ICommandSetGuildSeparated> RootSeparatedCommandSet { get; private set; }
-        = new List<ICommandSetGuildSeparated>();
 
-    public static void AddPublicRoot(ICommandSet set) => RootPublicCommandSet.Add(set);
-    public static void AddSeparatedCommandSet(ICommandSetGuildSeparated set) => RootSeparatedCommandSet.Add(set);
+    public static void AddRoot(ICommandSet set) => RootCommandSet.Add(set);
 
     public static void AnalyzeMessage(SocketMessage message)
     {
@@ -20,7 +19,7 @@ public static class CommandAnalyzer
         parts[0] = parts[0].Remove(0, 1);
         Command cmd = null;
         int depth = -1;
-        foreach (var set in RootPublicCommandSet)
+        foreach (var set in RootCommandSet)
         {
             depth = FindCommandInSet(set, in parts, out cmd);
             if (cmd is not null)

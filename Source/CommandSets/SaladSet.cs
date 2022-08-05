@@ -1,36 +1,25 @@
-using System.Windows.Input;
 using System.Text;
 using System.Xml;
-using System.Net;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.IO;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Discord;
-using Discord.Webhook;
 using Discord.WebSocket;
 using System.Text.Json;
-
 using StringDictionary = System.Collections.Generic.Dictionary<string, string>;
-using System.Reflection;
 
-public class SaladPublicSet : ICommandSet
+namespace SaladBot.Sets;
+
+public class SaladSet : ICommandSet
 {
-    public SocketGuild guildIn;
-    public Tictoc tictoc;
-    public ISocketMessageChannel dataChannel;
-
-    private Stopwatch watch = new Stopwatch();
-
     public ICommandSet BelongTo { get => null; }
     public string SetName { get; private set; } = "salad";
     public bool IsSet { get => true; }
     public List<ICommandSet> ChildCommandSets { get; private set; }
     public List<Command> ChildCommands { get; private set; }
 
-    public SaladPublicSet()
+    public SaladSet()
     {
         using (JsonDocument jd = JsonDocument.Parse(File.ReadAllText("config.json")))
         {
@@ -44,45 +33,6 @@ public class SaladPublicSet : ICommandSet
         {
             new CountdownSet(this)
         };
-
-        /*
-        Command.CheckingCommands.AddRange(new List<Command>()
-        {
-            Command.Create("set_data_channel",1,async(args,msg)=>
-            {
-                //dataChannel = 
-                //await msg.Channel.SendMessageAsync($"data channel has been set to #{dataChannel}");
-            }),
-            Command.Create("watch",1,async(args,msg)=>
-            {
-                switch(args[0])
-                {
-                    case "start":
-                        watch.Start();
-                        await msg.Channel.SendMessageAsync("The stopwatch is running!");
-                        break;
-                    case "stop":
-                        watch.Stop();
-                        await msg.Channel.SendMessageAsync(
-                            $"The stopwatch stopped! Time = {watch.ElapsedMilliseconds / 1000.0f}s"
-                        );
-                        watch.Reset();
-                        break;
-                    case "pause":
-                        watch.Stop();
-                        await msg.Channel.SendMessageAsync(
-                            $"The stopwatch paused! Time = {watch.ElapsedMilliseconds / 1000.0f}s"
-                        );
-                        break;
-                    case "resume":
-                        watch.Start();
-                        await msg.Channel.SendMessageAsync(
-                            $"The stopwatch resumed. from time = {watch.ElapsedMilliseconds / 1000.0f}s"
-                        );
-                        break;
-                }
-            })
-        });*/
 
     }
 

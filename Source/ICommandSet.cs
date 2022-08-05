@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System;
 using System.Reflection;
 
+namespace SaladBot;
+
 public interface ICommandSet : ICommandSetChild
 {
     string SetName { get; }
