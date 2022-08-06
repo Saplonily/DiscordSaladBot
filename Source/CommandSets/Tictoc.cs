@@ -108,7 +108,7 @@ public partial class TictocGameSet
                         else
                             ind++;
                         currentPlayer = players[ind];
-                        playingChannel.SendMessageAsync($"{currentPlayer.Mention}, it's not your turn!");
+                        playingChannel.SendMessageAsync($"{currentPlayer.Mention}, it's your turn!");
                     }
                     return null;
                 }
@@ -199,7 +199,7 @@ public partial class TictocGameSet
                             win2 = false;
                         if (h + counts > size.height || w + counts > size.width || grids[w + i, h + i].status != aim)
                             win3 = false;
-                        if (h - counts < 0 || w - counts < 0 || grids[w - i, h - i].status != aim)
+                        if (h - counts < 0 || w + counts < 0 || grids[w - i, h - i].status != aim)
                             win4 = false;
                     }
                     if (win1 || win2 || win3 || win4)
