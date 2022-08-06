@@ -156,17 +156,24 @@ public partial class TictocGameSet
 
         public void Start()
         {
-            currentPlayer = players[0];
-            grids = new ChessGrid[size.width, size.height];
-            for (int h = 0; h < size.height; h++)
+            if(players.Count != 0)
             {
-                for (int w = 0; w < size.width; w++)
+                currentPlayer = players[0];
+                grids = new ChessGrid[size.width, size.height];
+                for (int h = 0; h < size.height; h++)
                 {
-                    grids[w, h] = new ChessGrid();
+                    for (int w = 0; w < size.width; w++)
+                    {
+                        grids[w, h] = new ChessGrid();
+                    }
                 }
+                GameIsRunning = true;
+                ShowGamePad();
             }
-            GameIsRunning = true;
-            ShowGamePad();
+            else
+            {
+                playingChannel.SendMessageAsync("No players in the game!");
+            }
         }
 
         public SocketUser CheckWinner()
