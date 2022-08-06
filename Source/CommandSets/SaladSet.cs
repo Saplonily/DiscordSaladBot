@@ -206,7 +206,7 @@ public class SaladSet : ICommandSet
         var str = "I'm in these servers:\n";
         foreach (var item in Program.Client.Guilds)
         {
-            str+=$"--> {item.Name}";
+            str+=$"--> {item.Name}\n";
         }
         msg.Channel.SendMessageAsync(str);
     }
