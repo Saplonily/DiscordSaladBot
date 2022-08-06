@@ -68,7 +68,7 @@ public partial class TictocGameSet : ICommandSet
         msg.GetDataIns(Data).Start();
     }
 
-    [Command("place")]
+    [Command("place",2)]
     public void Place(string[] args, SocketMessage msg)
     {
         var game = msg.GetDataIns(Data);

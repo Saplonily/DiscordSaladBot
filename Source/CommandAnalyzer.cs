@@ -96,17 +96,18 @@ public static class CommandAnalyzer
                     return depth;
                 }
             }
-        }
-        //遍历指令集里的指令
-        foreach (var cmd in set.ChildCommands)
-        {
-            //TODO here
-            if (cmd.CommandName == cmdParts[depth + 1])
+            //遍历指令集里的指令
+            foreach (var cmd in set.ChildCommands)
             {
-                //指令昵称相同,返回函数
-                commandFound = cmd;
-                return depth;
+                //TODO here
+                if (cmd.CommandName == cmdParts[depth + 1])
+                {
+                    //指令昵称相同,返回函数
+                    commandFound = cmd;
+                    return depth;
+                }
             }
+
         }
         //异常返回
         commandFound = null;
