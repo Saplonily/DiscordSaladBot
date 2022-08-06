@@ -71,10 +71,11 @@ public static class CommandAnalyzer
         commandFound = null;
         int depth = depthSearched;
         //如果当前深度下指令集昵称与指令的深度位置的昵称相同,则查找指令集内的东西
-        if (set.SetName == cmdParts[0])
+        if (set.SetName == cmdParts[depth])
         {
             //看看有没有更多指令集
-            if (set.ChildCommandSets is not null)
+            //salad where_are_you
+            if (set.ChildCommandSets is not null && cmdParts.Length - 2 > depth)
             {
                 depth++;
                 Command deeperCommandFound = null;
