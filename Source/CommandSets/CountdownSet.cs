@@ -27,22 +27,22 @@ public class CountdownSet : ICommandSet
     }
 
     [Command("new", 2)]
-    public async void NewCountdown(string[] args, SocketMessage msg)
+    public void NewCountdown(string[] args, SocketMessage msg)
     {
         double time;
         if (Double.TryParse(args[0], out time))
         {
             Countdown c = new Countdown(Convert.ToInt64(time * 1000));
-            c.CountdownFinished += async c =>
+            c.CountdownFinished += c =>
             {
-                await msg.Channel.SendMessageAsync($"Countdown -{args[1]}- ended.");
+                msg.Channel.SendMessageAsync($"Countdown -{args[1]}- ended.");
                 c = null;
             };
-            await msg.Channel.SendMessageAsync($"Countdown -{args[1]}- started.");
+            msg.Channel.SendMessageAsync($"Countdown -{args[1]}- started.");
         }
         else
         {
-            await msg.Channel.SendMessageAsync("Invalid time!");
+            msg.Channel.SendMessageAsync("Invalid time!");
         }
     }
 

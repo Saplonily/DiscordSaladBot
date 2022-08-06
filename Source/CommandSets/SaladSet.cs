@@ -58,41 +58,41 @@ public class SaladSet : ICommandSet
     }
 
     [Command("hello", 0)]
-    public async Task Hello(string[] args, SocketMessage msg)
+    public void Hello(string[] args, SocketMessage msg)
     {
-        await msg.Channel.SendMessageAsync($"{msg.Author.Mention} Hello!");
+        msg.Channel.SendMessageAsync($"{msg.Author.Mention} Hello!");
     }
 
     [Command("age", 0)]
-    public async Task Age(string[] args, SocketMessage msg)
+    public void Age(string[] args, SocketMessage msg)
     {
-        await msg.Channel.SendMessageAsync($"Your account was created at {msg.Author.CreatedAt.DateTime}");
+        msg.Channel.SendMessageAsync($"Your account was created at {msg.Author.CreatedAt.DateTime}");
     }
 
     [Command("repeat", 1)]
-    public async Task Repeat(string[] args, SocketMessage msg)
+    public void Repeat(string[] args, SocketMessage msg)
     {
-        await msg.Channel.SendMessageAsync(args[0]);
+        msg.Channel.SendMessageAsync(args[0]);
     }
 
     [Command("repeat_to_channel", 2)]
-    public async Task RepeatToChannel(string[] args, SocketMessage msg)
+    public void RepeatToChannel(string[] args, SocketMessage msg)
     {
         var channelEnum = msg.MentionedChannels.GetEnumerator();
         channelEnum.MoveNext();
         var channel = channelEnum.Current as IMessageChannel;
-        await channel.SendMessageAsync(args[1]);
+        channel.SendMessageAsync(args[1]);
     }
 
     [Command("read_resource", 1)]
-    public async Task ReadResource(string[] args, SocketMessage msg)
+    public void ReadResource(string[] args, SocketMessage msg)
     {
         var s = FindResource(args[0]);
-        await msg.Channel.SendMessageAsync($"resource found:\n{s}");
+        msg.Channel.SendMessageAsync($"resource found:\n{s}");
     }
 
     [Command("check_weather", 2)]
-    public async Task CheckWeather(string[] args, SocketMessage msg)
+    public void CheckWeather(string[] args, SocketMessage msg)
     {
         var xmlStr = HTTPRequester.SendPost(
             "http://www.webxml.com.cn/WebServices/WeatherWebService.asmx/getWeatherbyCityName",
@@ -154,35 +154,35 @@ public class SaladSet : ICommandSet
                 }
 
             }
-            await msg.Channel.SendMessageAsync(sb.ToString());
+            msg.Channel.SendMessageAsync(sb.ToString());
         }
         else
         {
-            await msg.Channel.SendMessageAsync($"not support city! city name : {args[0]}");
+            msg.Channel.SendMessageAsync($"not support city! city name : {args[0]}");
         }
     }
 
     [Command("send_file", 1)]
-    public async Task SendFile(string[] args, SocketMessage msg)
+    public void SendFile(string[] args, SocketMessage msg)
     {
         if (args[0].Contains("..") || args[0].Contains("config.json"))
         {
-            await msg.Channel.SendMessageAsync("nice try.");
+            msg.Channel.SendMessageAsync("nice try.");
             return;
         }
         if (File.Exists(args[0]))
         {
-            await msg.Channel.SendFileAsync(args[0]);
+            msg.Channel.SendFileAsync(args[0]);
         }
         else
         {
-            await msg.Channel.SendMessageAsync($"file \"{args[0]}\" not exists!");
+            msg.Channel.SendMessageAsync($"file \"{args[0]}\" not exists!");
         }
 
     }
 
     [Command("check_ip", 1)]
-    public async Task CheckIp(string[] args, SocketMessage msg)
+    public void CheckIp(string[] args, SocketMessage msg)
     {
         var xmlStr = HTTPRequester.SendPost(
             "http://ws.webxml.com.cn/WebServices/IpAddressSearchWebService.asmx/getCountryCityByIp",
@@ -197,25 +197,26 @@ public class SaladSet : ICommandSet
         var root = xd.ChildNodes[1];
         var str = $"IP: {root.ChildNodes[0].FirstChild.Value}\n";
         str += $"Result: {root.ChildNodes[1].FirstChild.Value}";
-        await msg.Channel.SendMessageAsync(str);
+        msg.Channel.SendMessageAsync(str);
     }
 
     [Command("where_are_you", 0)]
-    public async Task WhereAreYou(string[] args, SocketMessage msg)
+    public void WhereAreYou(string[] args, SocketMessage msg)
     {
-        await msg.Channel.SendMessageAsync("I'm in these servers:");
+        var str = "I'm in these servers:\n";
         foreach (var item in Program.Client.Guilds)
         {
-            await msg.Channel.SendMessageAsync($"--> {item.Name}");
+            str+=$"--> {item.Name}";
         }
+        msg.Channel.SendMessageAsync(str);
     }
 
     [Command("send_http_request", 1)]
-    public async Task SendHTTPRequest(string[] args, SocketMessage msg)
+    public void SendHTTPRequest(string[] args, SocketMessage msg)
     {
         string result;
         result = HTTPRequester.SendPost(args[0], new Dictionary<string, string>(), "POST");
-        await msg.Channel.SendMessageAsync(result);
+        msg.Channel.SendMessageAsync(result);
     }
 
     protected static string FindResource(string resourceName)
