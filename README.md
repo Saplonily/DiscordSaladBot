@@ -4,7 +4,7 @@
 
 
 ## How to build
-Use .net core 3.1 to build it.<br>
+Use .net 6 to build it.<br>
 Easy like **`dotnet build`**<br>
 Remember to create a new file named `config.json`<br>
 And its content:<br>
