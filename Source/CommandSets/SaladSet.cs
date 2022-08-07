@@ -1,3 +1,5 @@
+using System;
+using System.Drawing;
 using System.Text;
 using System.Xml;
 using System.Diagnostics;
@@ -8,10 +10,10 @@ using Discord;
 using Discord.WebSocket;
 using System.Text.Json;
 using StringDictionary = System.Collections.Generic.Dictionary<string, string>;
-
+using SysColor = System.Drawing.Color;
 namespace SaladBot.Sets;
 
-public class SaladSet : ICommandSet
+public partial class SaladSet : ICommandSet
 {
     public ICommandSet BelongTo { get => null; }
     public string SetName { get; private set; } = "salad";
@@ -36,7 +38,7 @@ public class SaladSet : ICommandSet
             new DrawingSet(this),
             new TictocGameSet(this)
         };
-        
+
 
     }
 
@@ -208,7 +210,7 @@ public class SaladSet : ICommandSet
         var str = "I'm in these servers:\n";
         foreach (var item in Program.Client.Guilds)
         {
-            str+=$"--> {item.Name}\n";
+            str += $"--> {item.Name}\n";
         }
         msg.Channel.SendMessageAsync(str);
     }

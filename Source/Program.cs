@@ -57,8 +57,6 @@ class Program
 
     private Task CommandHandler(SocketMessage message)
     {
-        if (message.Author.IsBot) //忽略其他bot的
-            return Task.CompletedTask;
 
         string command = message.Content.Trim();
         int lengthOfCommand = command.Length;
