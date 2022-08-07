@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System;
 using System.Threading.Tasks;
 using Discord.Commands;

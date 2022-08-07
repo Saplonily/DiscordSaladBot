@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace SaladBot.Sets;
 
-public partial class TictocGameSet
+public partial class TictocGameSet : ICommandSet
 {
     public class Tictoc
     {

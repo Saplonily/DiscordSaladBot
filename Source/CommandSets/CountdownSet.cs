@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord.WebSocket;
 
-namespace SaladBot;
+namespace SaladBot.Sets;
 
 public class CountdownSet : ICommandSet
 {

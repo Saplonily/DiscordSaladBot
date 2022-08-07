@@ -33,8 +33,10 @@ public class SaladSet : ICommandSet
         {
             new CountdownSet(this),
             new WatchSet(this),
+            new DrawingSet(this),
             new TictocGameSet(this)
         };
+        
 
     }
 
